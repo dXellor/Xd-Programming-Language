@@ -1,6 +1,12 @@
 # Created by https://www.toptal.com/developers/gitignore/api/kate,flex,c
 # Edit at https://www.toptal.com/developers/gitignore?templates=kate,flex,c
 
+# Custom
+compiler/*
+*.tab.*
+xd_test.txt
+lex.yy.c
+
 ### C ###
 # Prerequisites
 *.d
