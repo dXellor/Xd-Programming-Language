@@ -1,0 +1,9 @@
+[def]
+    const id as int;                            // Konstante
+    id as string;                               // Variable
+
+    task id takes () {} returns string          // Funkcije
+[!def]
+
+[program]
+[!program]

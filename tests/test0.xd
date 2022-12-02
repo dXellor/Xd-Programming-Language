@@ -1,0 +1,22 @@
+// Xd concept
+
+[def]
+    const _id as _type                      // Konstante
+    id as type                              // Variable
+    int, float, char, string, bool, void    // Tipovi
+
+    task id takes (id : type, id : type) {} returns type          // Funkcije
+[!def]
+
+[program]
+
+    if (relop)
+        then {}
+    else
+        then {}
+
+    loop {
+
+    }for $lit times; || until (relexp)
+
+[!program]

@@ -5,6 +5,7 @@
 
     int yyparse(void);
     int yylex(void);
+    int yyerror(char *s);
     void warning(char *s);
 
     extern int yylineno;
@@ -58,11 +59,51 @@
 %token _CHAR_VAL
 
 %%
-epic
-: _ID
-;
-%%
 
+program
+  : def_sector program_sector
+  ;
+
+def_sector
+  : _DEF def_statement_list _DEFE
+  ;
+
+program_sector
+  : _MAIN statement_list _MAINE
+  ;
+
+def_statement_list
+  : /* empty */
+  | def_statement_list def_variable_statement
+  | def_statement_list def_task_statement
+  ;
+
+def_variable_statement
+  : const_keyword _ID _AS _TYPE _SEMICOLON // Treba dodati i pridodavanje vrednosti
+  ;
+
+def_task_statement
+  : _TASK _ID _TAKES _LPAREN parameters _RPAREN compound_statement _RETURNS _TYPE _SEMICOLON
+  ;
+
+const_keyword
+  : /* empty */
+  | _CONST
+  ;
+
+statement_list
+  : /* empty */
+  ;
+
+compound_statement
+  : _LBRACKET _RBRACKET
+  ;
+
+parameters
+  : /* empty */
+  ;
+
+%%
 
 int yyerror(char *s) {
   fprintf(stderr, "\nline %d: ERROR: %s", yylineno, s);
@@ -77,11 +118,8 @@ void warning(char *s) {
 
 int main() {
   int synerr;
-//   init_symtab();
 
-  synerr = yyparse();
-
-//   clear_symtab();
+  yyparse();
 
   if(warning_count)
     printf("\n%d warning(s).\n", warning_count);
