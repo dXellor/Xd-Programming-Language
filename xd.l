@@ -33,6 +33,7 @@
 "then"                      { return _THEN; }
 "loop"                      { return _LOOP; }
 "for"                       { return _FOR; }
+"times"                     { return _TIMES; }
 "until"                     { return _UNTIL; }
 
 "("                         { return _LPAREN; }

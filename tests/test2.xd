@@ -1,0 +1,33 @@
+[def]
+    var as int;
+    task Epic takes (a : int, b : string) {
+        x = a + b;
+    } returns int;
+[!def]
+
+[program]
+    var = "sdff" + 1 % (2 - e) / 2 + 1;
+
+    if (){
+
+    }
+
+    if () {
+
+    }else if(){
+
+    }else{
+
+    }
+
+    loop{
+
+    } for 5 times;
+
+    loop {
+
+    } until ();
+
+    Epic(3+2, "epic");
+
+[!program]

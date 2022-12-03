@@ -39,6 +39,7 @@
 %token _THEN
 %token _LOOP
 %token _FOR
+%token _TIMES
 %token _UNTIL
 
 %token _LPAREN
@@ -98,10 +99,46 @@ def_task_statement
 
 statement_list
   : /* empty */
+  | statement_list statement
+  ;
+
+statement
+  : compound_statement
+  | assignment_statement
+  | task_invoke _SEMICOLON
+  | if_statement
+  | loop_statement
   ;
 
 compound_statement
-  : _LBRACKET _RBRACKET
+  : _LBRACKET statement_list _RBRACKET
+  ;
+
+assignment_statement
+  : _ID _ASSIGN complex_expression _SEMICOLON
+  ;
+
+if_statement
+  : _IF _LPAREN rel_expression _RPAREN compound_statement else_part
+  ;
+
+else_part
+  : /* empty */
+  | _ELSE if_statement
+  | _ELSE compound_statement
+  ;
+
+loop_statement
+  : _LOOP compound_statement loop_type
+  ;
+
+loop_type
+  : _FOR literal _TIMES _SEMICOLON
+  | _UNTIL _LPAREN rel_expression _RPAREN _SEMICOLON
+  ;
+
+task_invoke
+  : _ID _LPAREN arguments _RPAREN
   ;
 
 ids
@@ -113,6 +150,34 @@ parameters
   : /* empty */
   | _ID _COL _TYPE
   | parameters _COMMA _ID _COL _TYPE
+  ;
+
+arguments
+  : /* empty */
+  | complex_expression
+  | arguments _COMMA complex_expression
+  ;
+
+rel_expression
+  : /* empty */
+  ;
+
+complex_expression
+  : expression
+  | complex_expression operator expression
+  ;
+
+expression
+  : literal
+  | _ID
+  | task_invoke
+  | _LPAREN complex_expression _RPAREN
+  ;
+
+operator
+  : _AROP
+  | _RELOP
+  | _BITOP
   ;
 
 literal
