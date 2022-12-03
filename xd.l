@@ -3,18 +3,19 @@
 %{
     #include <string.h>
     #include "xd.tab.h"
+    #include "xdheader.h"
 %}
 
 %%
 
 [ \t\n]+                    { /* skip */ }
 
-"int"                       { return _TYPE; }
-"float"                     { return _TYPE; }
-"char"                      { return _TYPE; }
-"string"                    { return _TYPE; }
-"bool"                      { return _TYPE; }
-"void"                      { return _TYPE; }
+"int"                       { yylval.i = INT; return _TYPE; }
+"float"                     { yylval.i = FLOAT; return _TYPE; }
+"char"                      { yylval.i = CHAR; return _TYPE; }
+"string"                    { yylval.i = STRING; return _TYPE; }
+"bool"                      { yylval.i = BOOL; return _TYPE; }
+"void"                      { yylval.i = VOID; return _TYPE; }
 
 "[def]"                     { return _DEF; }
 "[!def]"                    { return _DEFE; }
@@ -45,26 +46,28 @@
 ","                         { return _COMMA; }
 "="                         { return _ASSIGN; }
 
-"+"                         { return _AROP; }
-"-"                         { return _AROP; }
-"*"                         { return _AROP; }
-"/"                         { return _AROP; }
-"%"                         { return _AROP; }
+"+"                         { yylval.i = ADD; return _AROP; }
+"-"                         { yylval.i = SUB; return _AROP; }
+"*"                         { yylval.i = MUL; return _AROP; }
+"/"                         { yylval.i = DIV; return _AROP; }
+"%"                         { yylval.i = MOD; return _AROP; }
+"++"                        { yylval.i = INC; return _AROP; }
+"--"                        { yylval.i = DEC; return _AROP; }
 
-"<"                         { return _RELOP; }
-">"                         { return _RELOP; }
-"<="                        { return _RELOP; }
-">="                        { return _RELOP; }
-"=="                        { return _RELOP; }
-"!="                        { return _RELOP; }
+"<"                         { yylval.i = LT; return _RELOP; }
+">"                         { yylval.i = GT; return _RELOP; }
+"<="                        { yylval.i = LE; return _RELOP; }
+">="                        { yylval.i = GE; return _RELOP; }
+"=="                        { yylval.i = EQ; return _RELOP; }
+"!="                        { yylval.i = NE; return _RELOP; }
 
-[a-zA-Z][a-zA-Z0-9[_-]]*    { return _ID; }
-["].+["]                    { return _STRING; }
-"true"                      { return _BOOL_VAL; }
-"false"                     { return _BOOL_VAL; }
-[-]?[1-9][0-9]*             { return _INT_NUMBER; }
-[-]?([0-9]*[.])?[0-9]*      { return _FLOAT_NUMBER; }
-['].[']                     { return _CHAR_VAL; }
+"true"                      { yylval.i = TRUE; return _BOOL_VAL; }
+"false"                     { yylval.i = FALSE; return _BOOL_VAL; }
+[a-zA-Z][a-zA-Z0-9\_-]*     { yylval.s = strdup(yytext); return _ID; }
+["].*["]                    { yylval.s = strdup(yytext); return _STRING; }
+[-]?[1-9][0-9]*             { yylval.s = strdup(yytext); return _INT_NUMBER; }
+[-]?([0-9]*[.])?[0-9]*      { yylval.s = strdup(yytext); return _FLOAT_NUMBER; }
+['].[']                     { yylval.s = strdup(yytext); return _CHAR_VAL; }
 
 \/\/.*                      { /* skip */ }
 .                           { printf("Line %d: LEXICAL ERROR on char %c\n", yylineno, *yytext); }
