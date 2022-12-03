@@ -1,8 +1,8 @@
 [def]
-    const id as int;                            // Konstante
-    id as string;                               // Variable
+    const a = 123 as int;                            // Konstante
+    id, rl, r as string;                               // Variable
 
-    task id takes () {} returns string          // Funkcije
+    task id takes (a1 : int, a2 : string) {} returns string;         // Funkcije
 [!def]
 
 [program]
