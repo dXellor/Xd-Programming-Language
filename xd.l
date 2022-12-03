@@ -54,6 +54,11 @@
 "++"                        { yylval.i = INC; return _AROP; }
 "--"                        { yylval.i = DEC; return _AROP; }
 
+"|"                         { yylval.i = OR; return _BITOP; }
+"&"                         { yylval.i = AND; return _BITOP; }
+"^"                         { yylval.i = XOR; return _BITOP; }
+"~"                         { yylval.i = NOT; return _BITOP; }
+
 "<"                         { yylval.i = LT; return _RELOP; }
 ">"                         { yylval.i = GT; return _RELOP; }
 "<="                        { yylval.i = LE; return _RELOP; }

@@ -54,6 +54,7 @@
 
 %token <i> _AROP
 %token <i> _RELOP
+%token <i> _BITOP
 
 %token <s> _ID
 %token <s> _STRING
