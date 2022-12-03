@@ -2,6 +2,7 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include "xdheader.h"
 
     int yyparse(void);
     int yylex(void);
@@ -9,16 +10,19 @@
     void warning(char *s);
 
     extern int yylineno;
-    char char_buffer[100];
+    char char_buffer[CHAR_BUFFER_SIZE];
     int error_count = 0;
     int warning_count = 0;
 %}
 
-/*union*/
+%union{
+    int i;
+    char *s;
+}
 
 /*TOKENS*/
 
-%token _TYPE
+%token <i> _TYPE
 %token _DEF
 %token _DEFE
 %token _MAIN
@@ -48,15 +52,15 @@
 %token _COMMA
 %token _ASSIGN
 
-%token _AROP
-%token _RELOP
+%token <i> _AROP
+%token <i> _RELOP
 
-%token _ID
-%token _STRING
-%token _BOOL_VAL
-%token _INT_NUMBER
-%token _FLOAT_NUMBER
-%token _CHAR_VAL
+%token <s> _ID
+%token <s> _STRING
+%token <i> _BOOL_VAL
+%token <s> _INT_NUMBER
+%token <s> _FLOAT_NUMBER
+%token <s> _CHAR_VAL
 
 %%
 
@@ -75,20 +79,20 @@ program_sector
 def_statement_list
   : /* empty */
   | def_statement_list def_variable_statement
+  | def_statement_list def_constant_statement
   | def_statement_list def_task_statement
   ;
 
 def_variable_statement
-  : const_keyword _ID _AS _TYPE _SEMICOLON // Treba dodati i pridodavanje vrednosti
+  : ids _AS _TYPE _SEMICOLON
+  ;
+
+def_constant_statement
+  : _CONST _ID _ASSIGN literal _AS _TYPE _SEMICOLON
   ;
 
 def_task_statement
   : _TASK _ID _TAKES _LPAREN parameters _RPAREN compound_statement _RETURNS _TYPE _SEMICOLON
-  ;
-
-const_keyword
-  : /* empty */
-  | _CONST
   ;
 
 statement_list
@@ -99,8 +103,23 @@ compound_statement
   : _LBRACKET _RBRACKET
   ;
 
+ids
+  : _ID
+  | ids _COMMA _ID
+  ;
+
 parameters
   : /* empty */
+  | _ID _COL _TYPE
+  | parameters _COMMA _ID _COL _TYPE
+  ;
+
+literal
+  : _INT_NUMBER
+  | _FLOAT_NUMBER
+  | _BOOL_VAL
+  | _STRING
+  | _CHAR_VAL
   ;
 
 %%
